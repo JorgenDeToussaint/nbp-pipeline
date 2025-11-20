@@ -15,15 +15,34 @@ This project is structured and documented to serve as a **portfolio-grade Data E
 NBP API → RAW JSON → Transform → Clean CSV → DuckDB Warehouse → S3 Backup → Dashboard / SQL Analysis
 ```
 
-### Components:
-- **Extract** – request daily tables (A/B) from the public NBP API  
-- **Transform** – validation, schema standardization, timestamping  
-- **Load** – incremental load into DuckDB  
-- **Backup** – automatic upload of cleaned CSVs to AWS S3  
-- **Analytics** – SQL views + Streamlit dashboard  
-- **Automation** – GitHub Actions scheduled pipeline  
+## System Architecture (Mermaid Diagram)
+
+```mermaid
+flowchart LR
+    A[NBP API<br/>Daily Exchange Rates] 
+        --> B[Extract<br/>src/extract.py]
+
+    B --> C[Transform<br/>src/transform.py]
+
+    C --> D[Clean CSV<br/>data/processed/]
+
+    D --> E[DuckDB Warehouse<br/>local_datahub.duckdb]
+
+    D --> F[AWS S3 Backup<br/>upload_to_s3.py]
+
+    E --> G[SQL Analytics<br/>queries.sql / analysis.sql]
+
+    E --> H[Streamlit Dashboard<br/>dashboard/dashboard.py]
+
+    subgraph GitHub Actions
+        I[nbp_pipeline.yml<br/>Automated ETL Run]
+    end
+
+    I --> B
+```
 
 ---
+
 
 ## 2. Repository Structure
 
